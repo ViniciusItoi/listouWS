@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,13 +31,14 @@ public class ItemController {
 	@Autowired
 	private ItemRepository itemRepository;
 	
-	@RequestMapping(value = "/item", method = RequestMethod.GET)
+	@RequestMapping(value = "admin/listar-tudo-items", method = RequestMethod.GET)
     @ApiOperation(value = "API Get Method - path:\"/api/item\" lista items do banco")
-    public List<Item> ListarItems() {
+    public List<Item> ListarItems(@AuthenticationPrincipal UserDetails ud) {
+		System.out.println(ud.toString());
         return itemRepository.findAll();
     }
 	
-    @RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "user/item/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "API Get Method - path:\"/api/item/{id}\" devolve um item do banco")
     public ResponseEntity<Item> GetById(@PathVariable(value = "id") long id)
     {
@@ -45,14 +49,14 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/item", method =  RequestMethod.POST)
+    @RequestMapping(value = "user/item", method =  RequestMethod.POST)
     @ApiOperation(value = "API POST Method - path:\"/api/item\" adiciona item do banco")
     public Item Post(@RequestBody Item item)
     {
         return itemRepository.save(item);
     }
 
-    @RequestMapping(value = "/item/{id}", method =  RequestMethod.PUT)
+    @RequestMapping(value = "user/item/{id}", method =  RequestMethod.PUT)
     @ApiOperation(value = "API PUT Method - path:\"/api/item/{id}\" atualiza item do banco")
     public ResponseEntity<Item> Put(@PathVariable(value = "id") long id, @RequestBody Item newItem)
     {
@@ -64,7 +68,7 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/item/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "user/item/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value = "API DELETE Method - path:\"/api/item/{id}\" deleta item do banco")
     public ResponseEntity<Object> Delete(@PathVariable(value = "id") long id)
     {

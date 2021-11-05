@@ -27,13 +27,13 @@ public class ListaController {
 	@Autowired
 	private ListaRepository listaRepository;
 	
-	@RequestMapping(value = "/lista", method = RequestMethod.GET)
+	@RequestMapping(value = "admin/listar-tudo-lista", method = RequestMethod.GET)
 	@ApiOperation(value = "API Get Method - path:\"/api/lista\" retorna lista de todos as Listas banco")
     public List<Lista> ListarItems() {
         return listaRepository.findAll();
     }
 	
-    @RequestMapping(value = "/lista/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "user/lista/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "API Get Method - path:\"/api/lista/{id}\" retorna lista com o id")
     public ResponseEntity<Lista> GetById(@PathVariable(value = "id") long id)
     {
@@ -44,14 +44,14 @@ public class ListaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/lista", method =  RequestMethod.POST)
+    @RequestMapping(value = "user/lista", method =  RequestMethod.POST)
 	@ApiOperation(value = "API POST Method - path:\"/api/lista\" adiciona lista")
     public Lista Post(@RequestBody Lista lista)
     {
         return listaRepository.save(lista);
     }
 
-    @RequestMapping(value = "/lista/{id}", method =  RequestMethod.PUT)
+    @RequestMapping(value = "user/lista/{id}", method =  RequestMethod.PUT)
     @ApiOperation(value = "API PUT Method - path:\"/api/lista/{id}\" atualiza lista")
     public ResponseEntity<Lista> Put(@PathVariable(value = "id") long id, @RequestBody Lista newLista)
     {
@@ -63,7 +63,7 @@ public class ListaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/lista/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "user/lista/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value = "API DELETE Method - path:\"/api/lista/{id}\" deleta lista")
     public ResponseEntity<Object> Delete(@PathVariable(value = "id") long id)
     {
