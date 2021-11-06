@@ -20,25 +20,8 @@ public class Item implements Serializable {
 	private long id;
 	@Column(nullable = false)
 	private String nome;
-	private int quantidade;
 	private Double precoPretendidoUnd;
 	
-	@ManyToOne
-	@JoinColumn(name="lista_id", nullable=false)
-    private Lista lista;
-	
-	/**
-	 * @return the lista
-	 */
-	public Lista getLista() {
-		return lista;
-	}
-	/**
-	 * @param lista the lista to set
-	 */
-	public void setLista(Lista lista) {
-		this.lista = lista;
-	}
 	/**
 	 * @return the id
 	 */
@@ -64,18 +47,6 @@ public class Item implements Serializable {
 		this.nome = nome;
 	}
 	/**
-	 * @return the quantidade
-	 */
-	public int getQuantidade() {
-		return quantidade;
-	}
-	/**
-	 * @param quantidade the quantidade to set
-	 */
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
-	/**
 	 * @return the precoPretendidoUnd
 	 */
 	public Double getPrecoPretendidoUnd() {
@@ -87,5 +58,6 @@ public class Item implements Serializable {
 	public void setPrecoPretendidoUnd(Double precoPretendidoUnd) {
 		this.precoPretendidoUnd = precoPretendidoUnd;
 	}
-	 
+
+		 
 }

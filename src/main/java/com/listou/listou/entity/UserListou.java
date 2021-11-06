@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,22 +32,9 @@ public class UserListou implements Serializable{
 	private String name;
 	@NotNull
 	private boolean admin;
-	@OneToMany(mappedBy="userListou")
-	private Set<Lista> listas; 
+	@ElementCollection
+	private List<Long> listasId;
 	
-	
-	/**
-	 * @return the listas
-	 */
-	public Set<Lista> getListas() {
-		return listas;
-	}
-	/**
-	 * @param listas the listas to set
-	 */
-	public void setListas(Set<Lista> listas) {
-		this.listas = listas;
-	}
 	/**
 	 * @return the id
 	 */
@@ -107,6 +95,16 @@ public class UserListou implements Serializable{
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-	
-	
+	/**
+	 * @return the listasId
+	 */
+	public List<Long> getListasId() {
+		return listasId;
+	}
+	/**
+	 * @param listasId the listasId to set
+	 */
+	public void setListasId(List<Long> listasId) {
+		this.listasId = listasId;
+	} 	
 }

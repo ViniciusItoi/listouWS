@@ -1,6 +1,7 @@
 package com.listou.listou.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.listou.listou.entity.Lista;
+import com.listou.listou.entity.UserListou;
 import com.listou.listou.repository.ListaRepository;
+import com.listou.listou.repository.UserListouRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +30,9 @@ import io.swagger.annotations.ApiOperation;
 public class ListaController {
 	@Autowired
 	private ListaRepository listaRepository;
+	
+	@Autowired
+	private UserListouRepository userListouRepository;
 	
 	@RequestMapping(value = "admin/listar-tudo-lista", method = RequestMethod.GET)
 	@ApiOperation(value = "API Get Method - path:\"/api/lista\" retorna lista de todos as Listas banco")
@@ -45,10 +52,22 @@ public class ListaController {
     }
 
     @RequestMapping(value = "user/lista", method =  RequestMethod.POST)
-	@ApiOperation(value = "API POST Method - path:\"/api/lista\" adiciona lista")
-    public Lista Post(@RequestBody Lista lista)
+	@ApiOperation(value = "API POST Method - path:\"/api/user/lista\" adiciona lista")
+    public ResponseEntity<Lista> Post(@RequestBody Map<String, Object>  requestBody)
     {
-        return listaRepository.save(lista);
+    	Gson gson = new Gson();
+    	try {
+    		Lista listaJson = gson.fromJson(String.valueOf(gson.toJson(requestBody.get("lista"))), Lista.class);
+    		Lista lista = listaRepository.save(listaJson);
+    		UserListou userListou = userListouRepository.getById(Long.parseLong(String.valueOf(requestBody.get("userId"))));
+    		userListou.getListasId().add(lista.getId());
+    		userListouRepository.save(userListou);
+    		return new ResponseEntity<Lista>(lista, HttpStatus.OK);  		
+    	}catch (Exception e){
+    		System.out.println(e);
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
     }
 
     @RequestMapping(value = "user/lista/{id}", method =  RequestMethod.PUT)
@@ -75,4 +94,5 @@ public class ListaController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,28 +23,11 @@ public class Lista implements Serializable {
 	private long id;
 	private String descricao;
 	private String dtCompra;
-	private String isRecorrente;
+	private boolean recorrente;
 	private String recorrencia;
 	private Double orcamento;
-	@ManyToOne
-	@JoinColumn(name="userListou_id", nullable=false)
-    private UserListou userListou;
-	
-	@OneToMany(mappedBy="lista")
-	private Set<Item> items;
-	
-	/**
-	 * @return the userListou
-	 */
-	public UserListou getUserListou() {
-		return userListou;
-	}
-	/**
-	 * @param userListou the userListou to set
-	 */
-	public void setUserListou(UserListou userListou) {
-		this.userListou = userListou;
-	}
+	@ElementCollection
+	private List<Long> itemsListaId;
 	/**
 	 * @return the id
 	 */
@@ -81,16 +65,16 @@ public class Lista implements Serializable {
 		this.dtCompra = dtCompra;
 	}
 	/**
-	 * @return the isRecorrente
+	 * @return the recorrente
 	 */
-	public String getIsRecorrente() {
-		return isRecorrente;
+	public boolean isRecorrente() {
+		return recorrente;
 	}
 	/**
-	 * @param isRecorrente the isRecorrente to set
+	 * @param recorrente the recorrente to set
 	 */
-	public void setIsRecorrente(String isRecorrente) {
-		this.isRecorrente = isRecorrente;
+	public void setRecorrente(boolean recorrente) {
+		this.recorrente = recorrente;
 	}
 	/**
 	 * @return the recorrencia
@@ -117,15 +101,15 @@ public class Lista implements Serializable {
 		this.orcamento = orcamento;
 	}
 	/**
-	 * @return the items
+	 * @return the itemsListaId
 	 */
-	public Set<Item> getItems() {
-		return items;
+	public List<Long> getItemsListaId() {
+		return itemsListaId;
 	}
 	/**
-	 * @param items the items to set
+	 * @param itemsListaId the itemsListaId to set
 	 */
-	public void setItems(Set<Item> items) {
-		this.items = items;
+	public void setItemsListaId(List<Long> itemsListaId) {
+		this.itemsListaId = itemsListaId;
 	}
 }
