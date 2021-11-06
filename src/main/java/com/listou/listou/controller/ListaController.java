@@ -51,9 +51,19 @@ public class ListaController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    @RequestMapping(value = "lista/{id}", method = RequestMethod.GET)
+   	@ApiOperation(value = "API Get Method - path:\"/api/lista/{id}\" retorna lista com o id")
+       public ResponseEntity<Lista> GetByIdUnprotected(@PathVariable(value = "id") long id)
+       {
+           Optional<Lista> lista = listaRepository.findById(id);
+           if(lista.isPresent())
+               return new ResponseEntity<Lista>(lista.get(), HttpStatus.OK);
+           else
+               return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
 
     @RequestMapping(value = "user/lista", method =  RequestMethod.POST)
-	@ApiOperation(value = "API POST Method - path:\"/api/user/lista\" adiciona lista")
+	@ApiOperation(value = "API POST Method - path:\"/api//lista\" adiciona lista")
     public ResponseEntity<Lista> Post(@RequestBody Map<String, Object>  requestBody)
     {
     	Gson gson = new Gson();
@@ -70,7 +80,25 @@ public class ListaController {
     	}
     	
     }
-
+    @RequestMapping(value = "lista", method =  RequestMethod.POST)
+   	@ApiOperation(value = "API POST Method - path:\"/api/lista\" adiciona lista")
+   public ResponseEntity<Lista> PostUnprotected(@RequestBody Map<String, Object>  requestBody)
+   {
+   	Gson gson = new Gson();
+   	try {
+   		Lista listaJson = gson.fromJson(String.valueOf(gson.toJson(requestBody.get("lista"))), Lista.class);
+   		Lista lista = listaRepository.save(listaJson);
+   		UserListou userListou = userListouRepository.getById(Long.parseLong(String.valueOf(requestBody.get("userId"))));
+   		userListou.getListasId().add(lista.getId());
+   		userListouRepository.save(userListou);
+   		return new ResponseEntity<Lista>(lista, HttpStatus.OK);  		
+   	}catch (Exception e){
+   		System.out.println(e);
+   		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   	}
+   	
+   }
+    
     @RequestMapping(value = "user/lista/{id}", method =  RequestMethod.PUT)
     @ApiOperation(value = "API PUT Method - path:\"/api/lista/{id}\" atualiza lista")
     public ResponseEntity<Lista> Put(@PathVariable(value = "id") long id, @RequestBody Lista newLista)
