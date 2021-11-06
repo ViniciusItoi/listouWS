@@ -37,6 +37,21 @@ public class UserListouController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@ApiOperation(value = "API POST Method - path:\"/login\" retorna boolean Login")
+    public ResponseEntity<Boolean> Login(@RequestBody UserListou userFront)
+    {
+        UserListou userDB = userListouRepository.findByUsername(userFront.getUsername());
+        if(userDB!=null)
+            if(new BCryptPasswordEncoder().matches(userFront.getPassword(), userDB.getPassword())) {
+            	return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+            }else {
+            	return new ResponseEntity<Boolean>(false, HttpStatus.FORBIDDEN);
+            }
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 	
 	@RequestMapping(value = "create-user", method =  RequestMethod.POST)
 	@ApiOperation(value = "API POST Method - path:\"create-user\" adiciona usuario")

@@ -1,14 +1,17 @@
 package com.listou.listou.entity;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -28,8 +31,22 @@ public class UserListou implements Serializable{
 	private String name;
 	@NotNull
 	private boolean admin;
+	@OneToMany(mappedBy="userListou")
+	private Set<Lista> listas; 
 	
 	
+	/**
+	 * @return the listas
+	 */
+	public Set<Lista> getListas() {
+		return listas;
+	}
+	/**
+	 * @param listas the listas to set
+	 */
+	public void setListas(Set<Lista> listas) {
+		this.listas = listas;
+	}
 	/**
 	 * @return the id
 	 */

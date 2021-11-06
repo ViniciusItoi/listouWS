@@ -1,12 +1,16 @@
 package com.listou.listou.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Lista implements Serializable {
@@ -21,8 +25,25 @@ public class Lista implements Serializable {
 	private String isRecorrente;
 	private String recorrencia;
 	private Double orcamento;
-	private ArrayList<Item> items;
+	@ManyToOne
+	@JoinColumn(name="userListou_id", nullable=false)
+    private UserListou userListou;
 	
+	@OneToMany(mappedBy="lista")
+	private Set<Item> items;
+	
+	/**
+	 * @return the userListou
+	 */
+	public UserListou getUserListou() {
+		return userListou;
+	}
+	/**
+	 * @param userListou the userListou to set
+	 */
+	public void setUserListou(UserListou userListou) {
+		this.userListou = userListou;
+	}
 	/**
 	 * @return the id
 	 */
@@ -98,13 +119,13 @@ public class Lista implements Serializable {
 	/**
 	 * @return the items
 	 */
-	public ArrayList<Item> getItems() {
+	public Set<Item> getItems() {
 		return items;
 	}
 	/**
 	 * @param items the items to set
 	 */
-	public void setItems(ArrayList<Item> items) {
+	public void setItems(Set<Item> items) {
 		this.items = items;
 	}
 }
