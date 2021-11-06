@@ -1,5 +1,6 @@
 package com.listou.listou.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -95,4 +96,20 @@ public class ListaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
+    @RequestMapping(value = "user/listas/{username}", method = RequestMethod.GET)
+	@ApiOperation(value = "API Get Method - path:\"/api/user/listas\" retorna listas do usuario")
+    public ResponseEntity<List<Lista>> GetListsByUser(@PathVariable(value = "username") String username)
+    {
+		UserListou userListou = userListouRepository.findByUsername(username);
+		if(userListou == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		List<Lista> listas = new ArrayList<Lista>();
+		for(Long id : userListou.getListasId()){
+			Optional<Lista> lista = listaRepository.findById(id);
+			if(lista.isPresent())
+				listas.add(lista.get());
+		}
+		return new ResponseEntity<List<Lista>>(listas, HttpStatus.OK);
+    }
 }

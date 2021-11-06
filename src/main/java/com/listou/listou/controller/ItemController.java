@@ -33,9 +33,12 @@ public class ItemController {
 	
 	@RequestMapping(value = "admin/listar-tudo-items", method = RequestMethod.GET)
     @ApiOperation(value = "API Get Method - path:\"/api/item\" lista items do banco")
-    public List<Item> ListarItems(@AuthenticationPrincipal UserDetails ud) {
-		System.out.println(ud.toString());
-        return itemRepository.findAll();
+    public ResponseEntity<List<Item>> ListarItems() {
+		List<Item> listas = itemRepository.findAll();
+		if(listas.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		else
+			return new ResponseEntity<List<Item>>(listas, HttpStatus.OK);
     }
 	
     @RequestMapping(value = "user/item/{id}", method = RequestMethod.GET)
