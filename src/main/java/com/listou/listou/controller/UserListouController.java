@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.listou.listou.entity.UserListou;
 import com.listou.listou.repository.UserListouRepository;
 
@@ -41,23 +40,28 @@ public class UserListouController {
 	
 	@RequestMapping(value = "create-user", method =  RequestMethod.POST)
 	@ApiOperation(value = "API POST Method - path:\"create-user\" adiciona usuario")
-    public UserListou Post(@RequestBody UserListou userListou)
+    public ResponseEntity<UserListou> Post(@RequestBody UserListou userListou)
     {
+		if(userListou.getPassword() == null && userListou.getPassword().isBlank() 
+				|| userListou.getUsername() != null && userListou.getUsername().isBlank()
+ 				||userListou.getName() != null && userListou.getName().isBlank()) {
+			return new ResponseEntity<UserListou>(userListou ,HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 		//encoding password
 		userListou.setPassword(encode(userListou.getPassword()));
-        return userListouRepository.save(userListou);
+        return new ResponseEntity<UserListou>(userListouRepository.save(userListou), HttpStatus.OK);
     }
 
     @RequestMapping(value = "update-user/{id}", method =  RequestMethod.PUT)
     @ApiOperation(value = "API PUT Method - path:\"update-user/{id}\" atualiza usuario")
-    public ResponseEntity<UserListou> Put(@PathVariable(value = "id") long id, @RequestBody UserListou newUserListou)
-    {
+    public ResponseEntity<UserListou> Put(@PathVariable(value = "id") long id, @RequestBody UserListou newUserListou){
         Optional<UserListou> oldUserListou = userListouRepository.findById(id);
         if(oldUserListou.isPresent()){
         	//encoding password
             newUserListou.setPassword(encode(newUserListou.getPassword()));
+            newUserListou.setId(id);
         	return new ResponseEntity<UserListou>(userListouRepository.save(newUserListou), HttpStatus.OK);
-        }
+        }	
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

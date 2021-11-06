@@ -23,12 +23,25 @@ public class UserListou implements Serializable{
 	@Column(unique=true)
 	private String username;
 	@NotNull
-	@JsonIgnore
 	private String password;
 	@NotNull
 	private String name;
 	@NotNull
 	private boolean admin;
+	
+	
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 	/**
 	 * @return the username
 	 */
